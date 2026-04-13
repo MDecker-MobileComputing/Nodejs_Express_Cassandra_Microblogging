@@ -26,6 +26,18 @@ docker logs -f cassandra-web
 
 <br>
 
+----
+
+## CQL-Befehle ##
+
+<br>
+
+Termin zu einem der Container mit Cassandra-Instanz öffnen und mit `cqlsh` CLI starten.
+
+Alle Keyspaces ausgeben: `describe keyspaces`
+
+<br>
+
 ## Cassandra Web ##
 
 <br>
