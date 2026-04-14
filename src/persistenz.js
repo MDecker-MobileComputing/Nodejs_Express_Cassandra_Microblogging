@@ -61,10 +61,13 @@ async function checkKeyspace() {
     );
 
     const keyspacesArray  = queryResult.rows.map( row => row.keyspace_name );
+
+    /*
     const anzahlKeyspaces = keyspacesArray.length;
     const keyspacesString = keyspacesArray.join( ", " );
     logger.info(
         `Verfügbare Keyspaces (${anzahlKeyspaces}): ${keyspacesString}` );
+    */
 
     if ( keyspacesArray.includes( MEIN_KEYSPACE ) ) {
 

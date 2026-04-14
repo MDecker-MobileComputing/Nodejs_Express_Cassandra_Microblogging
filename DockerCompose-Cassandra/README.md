@@ -62,10 +62,3 @@ Verbindet sich beim Start automatisch mit der Cassandra-Instanz, ist danach
 lokal unter http://localhost:3000 erreichbar.
 
 <br>
-
-Beispiel für Befehl mit der *Cassandra Query Language (CQL)*, die man mit diesem Web-UI direkt ausführen kann:
-```
-select * from kino.kinoprogramm
-```
-
-<br>
