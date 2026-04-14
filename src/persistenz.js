@@ -114,7 +114,7 @@ async function checkTabelle() {
                 PRIMARY KEY ((benutzername), erstellt_am)
             ) WITH CLUSTERING ORDER BY (erstellt_am DESC)`
         );
-        // Partition Key : benutzername
+        // Partition  Key: benutzername
         // Clustering Key: erstellt_am
 
         logger.info( `Tabelle "nachrichten" erfolgreich erzeugt.` );
@@ -140,11 +140,12 @@ export async function speichereNachricht( benutzername, nachricht ) {
 
         await cassandraClient.execute(
             `INSERT INTO ${MEIN_KEYSPACE}.nachrichten
-             (nachricht_id, benutzername, nachricht_text, erstellt_am)
-             VALUES (?, ?, ?, ?)`,
+                (nachricht_id, benutzername, nachricht_text, erstellt_am)
+                VALUES (?, ?, ?, ?)`,
             [ nachricht_id, benutzername, nachricht, erstellt_am ],
             { prepare: true }
         );
+        // "prepare:true" für Prepared Statement
 
         logger.info( `Nachricht von "${benutzername}" erfolgreich gespeichert.` );
         return true;
