@@ -16,8 +16,6 @@ services:
       - HEAP_NEWSIZE=100M
     ports:
       - "9042:9042"   # CQL native transport port
-      - "7000:7000"   # Inter-node cluster communication
-      - "7001:7001"   # TLS inter-node cluster communication
     networks:
       - netzwerk-intern   # für Datenaustausch zwischen den Cassandra-Knoten
       - netzwerk-extern   # Für externen Zugriff
@@ -43,8 +41,6 @@ services:
       - HEAP_NEWSIZE=100M
     ports:
       - "9043:9042"
-      - "7002:7000"
-      - "7003:7001"
     depends_on:
       cassandra-1:
         condition: service_healthy
