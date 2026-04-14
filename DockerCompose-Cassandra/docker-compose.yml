@@ -17,8 +17,7 @@ services:
     ports:
       - "9042:9042"   # CQL native transport port
     networks:
-      - netzwerk-intern   # für Datenaustausch zwischen den Cassandra-Knoten
-      - netzwerk-extern   # Für externen Zugriff
+      - cassandra-netzwerk
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "cqlsh -e 'describe cluster'"]
@@ -45,8 +44,7 @@ services:
       cassandra-1:
         condition: service_healthy
     networks:
-      - netzwerk-intern  # For inter-node communication
-      - netzwerk-extern  # For external client access
+      - cassandra-netzwerk
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "cqlsh -e 'describe cluster'"]
@@ -73,7 +71,5 @@ services:
   #     - cassandra-2-network
 
 networks:
-  netzwerk-intern:
-    driver: bridge
-  netzwerk-extern:
+  cassandra-netzwerk:
     driver: bridge
