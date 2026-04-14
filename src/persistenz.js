@@ -8,7 +8,7 @@ const logger = createLogger( "persistenz" );
 const MEIN_KEYSPACE = "microblogging";
 
 
-
+/** Objekt für Arbeit mit Cassandra-API. */
 let cassandraClient = null;
 
 
@@ -18,6 +18,8 @@ let cassandraClient = null;
  * @returns Casssandra-Objekt
  */
 export async function initDatenbankverbindung() {
+
+    logger.info( "Versuche, Verbindung zu Cassandra-Cluster aufzubauen ..." );
 
     cassandraClient = new cassandra.Client({
         contactPoints: [ "localhost:9042", "localhost:9043" ],
@@ -31,9 +33,10 @@ export async function initDatenbankverbindung() {
     try {
 
         await cassandraClient.connect();
-        logger.info( "Verbindung zu Cassandra-Datenbank aufgebaut" );
+        logger.info( "Verbindung zu Cassandra-Cluster aufgebaut." );
 
         await checkKeyspace();
+        await checkTabelle();
 
         return cassandraClient;
 
@@ -70,9 +73,48 @@ async function checkKeyspace() {
         logger.warn( `Keyspace "${MEIN_KEYSPACE}" noch nicht vorhanden, versuche ihn zu erzeugen.` );
 
         await cassandraClient.execute(
-            `CREATE KEYSPACE ${MEIN_KEYSPACE} WITH REPLICATION = { 'class': 'SimpleStrategy', 'replication_factor': 1 }`
+            `CREATE KEYSPACE ${MEIN_KEYSPACE}
+                 WITH REPLICATION = { 'class': 'SimpleStrategy', 'replication_factor': 1 }`
         );
 
         logger.info( `Keyspace "${MEIN_KEYSPACE}" erfolgreich erzeugt.` );
+    }
+}
+
+
+/**
+ * Tabelle für Applikation bei Bedarf anlegen.
+ */
+async function checkTabelle() {
+
+    // Prüfe ob Tabelle "nachrichten" existiert
+    const queryResult = await cassandraClient.execute(
+        `SELECT table_name FROM system_schema.tables
+        WHERE keyspace_name = '${MEIN_KEYSPACE}'
+        AND table_name = 'nachrichten'`
+    );
+
+    if ( queryResult.rows.length > 0 ) {
+
+        logger.info( `Tabelle "nachrichten" schon vorhanden.` );
+
+    } else {
+
+        logger.warn(
+            `Tabelle "nachrichten" noch nicht vorhanden, versuche sie zu erzeugen.` );
+
+        await cassandraClient.execute(
+            `CREATE TABLE IF NOT EXISTS ${MEIN_KEYSPACE}.nachrichten (
+                nachricht_id UUID,
+                benutzername TEXT,
+                nachricht_text TEXT,
+                erstellt_am TIMESTAMP,
+                PRIMARY KEY ((benutzername), erstellt_am)
+            ) WITH CLUSTERING ORDER BY (erstellt_am DESC)`
+        );
+        // Partition Key : benutzername
+        // Clustering Key: erstellt_am
+
+        logger.info( `Tabelle "nachrichten" erfolgreich erzeugt.` );
     }
 }

@@ -32,9 +32,23 @@ docker logs -f cassandra-web
 
 <br>
 
-Termin zu einem der Container mit Cassandra-Instanz öffnen und mit `cqlsh` CLI starten.
+Terminal zu `microblogging-cassandra-1` öffnen und mit dem CLI `cqlsh` (Cassandra Query Language Shell) starten.
 
 Alle Keyspaces ausgeben: `describe keyspaces`
+
+Details zu einzelnem Keyspace abfragen: `DESCRIBE KEYSPACE <name_keyspace>`
+
+<br>
+
+Keyspace anlegen:
+```
+CREATE KEYSPACE microblogging
+       WITH REPLICATION = { 'class': 'SimpleStrategy', 'replication_factor': 1 };
+```
+
+<br>
+
+Sitzung beenden (`cqlsh` verlassen): `quit`
 
 <br>
 

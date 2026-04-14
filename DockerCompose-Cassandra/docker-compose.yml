@@ -1,8 +1,10 @@
 version: '3.8'
 
+# CASSANDRA-Version ist in .env-Datei definiert
+
 services:
   cassandra-1:
-    image: cassandra:5.0.7
+    image: cassandra:${CASSANDRA_VERSION}
     container_name: microblogging-cassandra-1
     environment:
       - CASSANDRA_CLUSTER_NAME=MicrobloggingCluster
@@ -18,7 +20,7 @@ services:
       - "7001:7001"   # TLS inter-node cluster communication
     networks:
       - netzwerk-intern   # für Datenaustausch zwischen den Cassandra-Knoten
-      - netzwerk-extern-1 # Für Zugriff von Spring-Boot-Anwendung
+      - netzwerk-extern   # Für externen Zugriff
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "cqlsh -e 'describe cluster'"]
@@ -28,10 +30,10 @@ services:
       start_period: 60s
 
   cassandra-2:
-    image: cassandra:4.1
+    image: cassandra:${CASSANDRA_VERSION}
     container_name: microblogging-cassandra-2
     environment:
-      - CASSANDRA_CLUSTER_NAME=KinoprogrammCluster
+      - CASSANDRA_CLUSTER_NAME=MicrobloggingCluster
       - CASSANDRA_DC=rechenzentrum1
       - CASSANDRA_RACK=rack2
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
@@ -48,7 +50,7 @@ services:
         condition: service_healthy
     networks:
       - netzwerk-intern  # For inter-node communication
-      - netzwerk-extern-2 # For external client access
+      - netzwerk-extern  # For external client access
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "cqlsh -e 'describe cluster'"]
@@ -77,7 +79,5 @@ services:
 networks:
   netzwerk-intern:
     driver: bridge
-  netzwerk-extern-1:
-    driver: bridge
-  netzwerk-extern-2:
+  netzwerk-extern:
     driver: bridge
