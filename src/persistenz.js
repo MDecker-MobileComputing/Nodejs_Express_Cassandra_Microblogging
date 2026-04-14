@@ -95,8 +95,8 @@ async function checkTabelle() {
     // Prüfe ob Tabelle "nachrichten" existiert
     const queryResult = await cassandraClient.execute(
         `SELECT table_name FROM system_schema.tables
-        WHERE keyspace_name = '${MEIN_KEYSPACE}'
-        AND table_name = 'nachrichten'`
+           WHERE keyspace_name = '${MEIN_KEYSPACE}'
+           AND table_name = 'nachrichten'`
     );
 
     if ( queryResult.rows.length > 0 ) {

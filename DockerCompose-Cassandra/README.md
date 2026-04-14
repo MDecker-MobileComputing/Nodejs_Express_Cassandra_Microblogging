@@ -52,6 +52,31 @@ Sitzung beenden (`cqlsh` verlassen): `quit`
 
 <br>
 
+----
+
+## nodetool-Befehle ##
+
+<br>
+
+Abfrage, welche Knoten einen bestimmten Datensatz speichern müssen:
+```
+nodetool getendpoints <keyspace> <table> <partition_key>
+```
+Funktioniert auch, wenn der *Partition Key* noch nicht existiert. 
+
+<br>
+
+Konkretes Beispiel:
+```
+nodetool getendpoints microblogging nachrichten testnutzer
+```
+
+Es werden eine oder mehrere IP-Adressen ausgegeben.
+
+<br>
+
+----
+
 ## Cassandra Web ##
 
 <br>
