@@ -38,6 +38,8 @@ export async function initDatenbankverbindung() {
         await checkKeyspace();
         await checkTabelle();
 
+        await speichereNachricht( "testnutzer", "testnachricht" );
+
         return cassandraClient;
 
     } catch ( fehler ) {
@@ -116,5 +118,40 @@ async function checkTabelle() {
         // Clustering Key: erstellt_am
 
         logger.info( `Tabelle "nachrichten" erfolgreich erzeugt.` );
+    }
+}
+
+
+/**
+ * Nachricht in Datenbank schreiben.
+ *
+ * @param {String} benutzername Nutzername von Verfasser der Nachricht
+ *
+ * @param {String} nachricht Eigentlich Inhalt der (Kurz-)Nachricht
+ *
+ * @return {Boolean} `true` wenn Nachricht erfolgreich speichern konnte
+ */
+export async function speichereNachricht( benutzername, nachricht ) {
+
+    const nachricht_id = cassandra.types.uuid();
+    const erstellt_am  = new Date();
+
+    try {
+
+        await cassandraClient.execute(
+            `INSERT INTO ${MEIN_KEYSPACE}.nachrichten
+             (nachricht_id, benutzername, nachricht_text, erstellt_am)
+             VALUES (?, ?, ?, ?)`,
+            [ nachricht_id, benutzername, nachricht, erstellt_am ],
+            { prepare: true }
+        );
+
+        logger.info( `Nachricht von "${benutzername}" erfolgreich gespeichert.` );
+        return true;
+
+    } catch ( fehler ) {
+
+        logger.error( `Fehler beim Speichern der Nachricht: `, fehler );
+        return false;
     }
 }
