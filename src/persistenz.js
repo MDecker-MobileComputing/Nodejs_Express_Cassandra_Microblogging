@@ -167,8 +167,9 @@ export async function speichereNachricht( benutzername, nachricht ) {
  * @param {*} benutzername Name des Nutzers, dessen Nachrichten von der Datenbank
  *                         gelesen werden sollen
  *
- * @returns {Array} Array mit allen Nachrichten des Nutzers; Array kann leer sein, wenn Nutzer keine Nachrichten hat
- *                  oder Fehler beim Lesen der Datenbank aufgetreten ist.
+ * @returns {Array} Array mit allen Nachrichten des Nutzers; Array kann leer sein,
+ *                  wenn Nutzer keine Nachrichten hat; im Fehlerfall wird `null`
+ *                  zurückgegeben.
  */
 export async function holeNachrichten( benutzername ) {
 
@@ -194,6 +195,7 @@ export async function holeNachrichten( benutzername ) {
         logger.error(
             `Fehler beim Abrufen der Nachrichten für Nutzer "${benutzername}": `,
             fehler );
-        return [];
+
+        return null;
     }
 }

@@ -32,7 +32,7 @@ export function routenRegistrieren( expressObjekt ) {
  * @param {*} response Response-Codes: 201 = Created, 400 = Bad Request (unvollständige Attribute),
  *                     500 = Internal Server Error (Fehler beim Speichern der Nachricht auf Datenbank).
  *                     JSON enthält immer das Attribut "status" mit Wert "OK" oder "Fehler", im Fehlerfall
- *                     zusätzlich das Attribut "message" mit einer Fehlerbeschreibung.
+ *                     zusätzlich das Attribut "fehlertext" mit einer Fehlerbeschreibung.
  */
 async function postNachricht( request, response ) {
 
@@ -43,12 +43,14 @@ async function postNachricht( request, response ) {
 
         logger.warn( "Ungültige Anfrage, fehlende oder leere Felder." );
         response.status( 400 )
-                .json( { status: "Fehler", message: "Ungültige Anfrage, fehlende oder leere Felder." } );
+                .json( { status    : "Fehler",
+                         fehlertext: "Ungültige Anfrage, fehlende oder leere Felder." } );
 
     } else {
 
         const erfolgreichGespeichert =
                     await speichereNachricht( benutzername.trim(), nachricht.trim() );
+
         if ( erfolgreichGespeichert ) {
 
             response.status( 201 )
@@ -57,7 +59,8 @@ async function postNachricht( request, response ) {
         } else {
 
             response.status( 500 )
-                    .json( { status: "Fehler", message: "Fehler beim Speichern der Nachricht." } );
+                    .json( { status    : "Fehler",
+                             fehlertext: "Fehler beim Speichern der Nachricht." } );
         }
     }
 }
@@ -71,9 +74,9 @@ async function postNachricht( request, response ) {
  * @param {*} response Response-Codes: 200 = OK, 400 = Bad Request (fehlender Parameter "benutzername"),
  *                     500 = Internal Server Error (Fehler beim Abrufen der Nachrichten von der Datenbank).
  *                     JSON enthält immer das Attribut "status" mit Wert "OK" oder "Fehler", im Fehlerfall
- *                     zusätzlich das Attribut "message" mit einer Fehlerbeschreibung. Im Erfolgsfall enthält
+ *                     zusätzlich das Attribut "fehlertext" mit einer Fehlerbeschreibung. Im Erfolgsfall enthält
  *                     JSON zusätzlich das Attribut "nachrichten" mit einem Array aller Nachrichten des Nutzers,
- *            das auch leer sein kann.
+ *                     sowie das Attribut "anzahl" mit der Anzahl der Nachrichten.
  */
 async function getNachrichten( request, response ) {
 
@@ -88,7 +91,18 @@ async function getNachrichten( request, response ) {
     } else {
 
         const nachrichtenArray = await holeNachrichten( benutzername.trim() );
-        response.status( 200 )
-                .json( { status: "OK", nachrichten: nachrichtenArray } );
+
+        if ( nachrichtenArray === null ) {
+
+            response.status( 500 )
+                    .json( { status    : "Fehler",
+                             fehlertext: "Fehler beim Abrufen der Nachrichten von der Datenbank." } );
+        } else
+
+            response.status( 200 )
+                    .json( { status     : "OK",
+                             anzahl     : nachrichtenArray.length,
+                             nachrichten: nachrichtenArray
+                           } );
     }
 }
