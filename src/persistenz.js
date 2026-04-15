@@ -38,7 +38,7 @@ export async function initDatenbankverbindung() {
         await checkKeyspace();
         await checkTabelle();
 
-        await speichereNachricht( "testnutzer", "testnachricht" );
+        await speichereNachricht( "testnutzer", "Testnachricht" );
 
         return cassandraClient;
 

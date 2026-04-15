@@ -39,6 +39,13 @@ CREATE KEYSPACE microblogging
 
 <br>
 
+Alle Nachrichten eines bestimmten Nutzers abfragen:
+```
+SELECT nachricht_text, erstellt_am FROM microblogging.nachrichten WHERE benutzername = 'testnutzer';
+```
+
+<br>
+
 Sitzung beenden (`cqlsh` verlassen): `quit`
 
 <br>
