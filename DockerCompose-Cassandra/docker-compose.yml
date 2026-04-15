@@ -1,6 +1,6 @@
 version: '3.8'
 
-# CASSANDRA-Version ist in .env-Datei definiert
+# Version von Image "Cassandra" ist in .env-Datei definiert
 
 services:
   cassandra-1:

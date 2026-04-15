@@ -58,11 +58,24 @@ Sitzung beenden (`cqlsh` verlassen): `quit`
 
 <br>
 
+[Nodetool](https://cassandra.apache.org/doc/5.0/cassandra/managing/tools/nodetool/nodetool.html)
+ist ein Kommandozeilen-Tool, das direkten Zugriff auf interne Verwaltungs- und Wartungsfunktionen
+Cassandra-Clusters bietet.
+
+<br>
+
+Liste aller Knoten inkl. Datenvolumen ausgeben:
+```
+nodetool status
+```
+
+<br>
+
 Abfrage, welche Knoten einen bestimmten Datensatz speichern müssen:
 ```
 nodetool getendpoints <keyspace> <table> <partition_key>
 ```
-Funktioniert auch, wenn der *Partition Key* noch nicht existiert. 
+Funktioniert auch, wenn der *Partition Key* noch nicht existiert.
 
 <br>
 
