@@ -17,15 +17,6 @@ die Daten aus.
 
 <br>
 
-Log-Dateien von den drei Containern auslesen:
-```
-docker logs -f kinoprogramm-cassandra-1
-docker logs -f kinoprogramm-cassandra-2
-docker logs -f cassandra-web
-```
-
-<br>
-
 ----
 
 ## CQL-Befehle ##
