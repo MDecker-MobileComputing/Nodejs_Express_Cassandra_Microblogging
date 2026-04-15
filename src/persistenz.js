@@ -159,3 +159,41 @@ export async function speichereNachricht( benutzername, nachricht ) {
         return false;
     }
 }
+
+
+/**
+ * Alle Nachrichten eines bestimmten Nutzers aus der Datenbank lesen.
+ *
+ * @param {*} benutzername Name des Nutzers, dessen Nachrichten von der Datenbank
+ *                         gelesen werden sollen
+ *
+ * @returns {Array} Array mit allen Nachrichten des Nutzers; Array kann leer sein, wenn Nutzer keine Nachrichten hat
+ *                  oder Fehler beim Lesen der Datenbank aufgetreten ist.
+ */
+export async function holeNachrichten( benutzername ) {
+
+    try {
+
+        const queryResult = await cassandraClient.execute(
+            `SELECT nachricht_text, erstellt_am FROM ${MEIN_KEYSPACE}.nachrichten
+                WHERE benutzername = ?`,
+            [ benutzername ],
+            { prepare: true }
+        );
+
+        const nachrichtenArray =
+                    queryResult.rows.map( row => ({
+                        nachricht  : row.nachricht_text,
+                        erstellt_am: row.erstellt_am
+        }) );
+
+        return nachrichtenArray;
+
+    } catch ( fehler ) {
+
+        logger.error(
+            `Fehler beim Abrufen der Nachrichten für Nutzer "${benutzername}": `,
+            fehler );
+        return [];
+    }
+}
