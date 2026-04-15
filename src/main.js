@@ -1,5 +1,6 @@
-import createLogger from "logging";
-import express      from "express";
+import createLogger           from "logging";
+import express                from "express";
+import { routenRegistrieren } from "./controller.js";
 
 import { initDatenbankverbindung } from './persistenz.js';
 
@@ -18,9 +19,15 @@ try {
     process.exit(1);
 }
 
+
 const expressObjekt = express();
 
+// Middleware-Funktionen einhängen
 expressObjekt.use( express.static( "public_html" ) );
+expressObjekt.use( express.json() );
+
+routenRegistrieren( expressObjekt );
+
 
 const PORTNUMMER = 8080;
 

@@ -150,7 +150,7 @@ export async function speichereNachricht( benutzername, nachricht ) {
         );
         // "prepare:true" für Prepared Statement
 
-        logger.info( `Nachricht von "${benutzername}" erfolgreich gespeichert.` );
+        logger.info( `Nachricht von "${benutzername}" erfolgreich gespeichert: "${nachricht}"` );
         return true;
 
     } catch ( fehler ) {
