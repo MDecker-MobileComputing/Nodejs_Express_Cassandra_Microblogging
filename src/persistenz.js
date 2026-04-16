@@ -38,7 +38,8 @@ export async function initDatenbankverbindung() {
         await checkKeyspace();
         await checkTabelle();
 
-        await speichereNachricht( "testnutzer", "Testnachricht" );
+        await speichereNachricht( "testnutzer",
+                                  `DB-Test am ${new Date().toLocaleString("de-DE")}` );
 
         return cassandraClient;
 
@@ -89,6 +90,9 @@ async function checkKeyspace() {
 
 /**
  * Tabelle für Applikation bei Bedarf anlegen.
+ *
+ * Für Schema-Operationen werden Konsistenzlevel nicht berücksichtigt, da diese
+ * über das Gossiping-Protokoll zwischen den Knoten synchronisiert werden.
  */
 async function checkTabelle() {
 
@@ -146,9 +150,18 @@ export async function speichereNachricht( benutzername, nachricht ) {
                 (nachricht_id, benutzername, nachricht_text, erstellt_am)
                 VALUES (?, ?, ?, ?)`,
             [ nachricht_id, benutzername, nachricht, erstellt_am ],
-            { prepare: true }
+            {
+                prepare: true, // Prepared Statement
+                consistencyLevel: cassandra.types.consistencies.quorum
+            }
         );
-        // "prepare:true" für Prepared Statement
+
+        // Konsistenzlevel-Optionen:
+        // ONE          - Schnellste, aber schwächste Garantie (nur 1 Replik)
+        // LOCAL_ONE    - Standard für Single-Datacenter (nur lokale Replik)
+        // QUORUM       - Mehrheit der Repliken (besseres Gleichgewicht)
+        // LOCAL_QUORUM - Quorum im lokalen Datencenter
+        // ALL          - Stärkste Garantie (alle Repliken bestätigen)
 
         logger.info( `Nachricht von "${benutzername}" erfolgreich gespeichert: "${nachricht}"` );
         return true;
@@ -179,14 +192,17 @@ export async function holeNachrichten( benutzername ) {
             `SELECT nachricht_text, erstellt_am FROM ${MEIN_KEYSPACE}.nachrichten
                 WHERE benutzername = ?`,
             [ benutzername ],
-            { prepare: true }
+            {
+                prepare: true, // Prepared Statement
+                consistencyLevel: cassandra.types.consistencies.localQuorum
+            }
         );
 
         const nachrichtenArray =
                     queryResult.rows.map( row => ({
                         nachricht  : row.nachricht_text,
                         erstellt_am: row.erstellt_am
-        }) );
+                    }) );
 
         return nachrichtenArray;
 
