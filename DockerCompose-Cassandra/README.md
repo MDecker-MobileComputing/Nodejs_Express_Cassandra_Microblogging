@@ -91,6 +91,10 @@ Gossip-Info über alle Knoten abfragen:
 nodetool gossipinfo
 ```
 
+[Gossip]](https://docs.datastax.com/en/cassandra-oss/3.x/cassandra/architecture/archGossipAbout.html)
+ist das Peer-to-Peer-Protokoll von Cassandra, mit dem die Knoten direkt untereinander Zustandsinformationen
+über Knoten austauschen.
+
 <br>
 
 ----
