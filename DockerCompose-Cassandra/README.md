@@ -86,6 +86,13 @@ Es werden eine oder mehrere IP-Adressen ausgegeben.
 
 <br>
 
+Gossip-Info über alle Knoten abfragen:
+```
+nodetool gossipinfo
+```
+
+<br>
+
 ----
 
 ## Cassandra Web ##

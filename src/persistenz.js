@@ -1,5 +1,5 @@
 import createLogger from "logging";
-import cassandra from "cassandra-driver";
+import cassandra    from "cassandra-driver";
 
 const logger = createLogger( "persistenz" );
 
