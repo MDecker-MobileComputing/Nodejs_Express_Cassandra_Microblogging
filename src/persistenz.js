@@ -62,7 +62,9 @@ async function erzeugeKeyspace() {
 
     await cassandraClient.execute(
         `CREATE KEYSPACE IF NOT EXISTS ${MEIN_KEYSPACE}
-                WITH REPLICATION = { 'class': 'SimpleStrategy', 'replication_factor': 1 }`
+                WITH REPLICATION = { 'class'             : 'SimpleStrategy',
+                                     'replication_factor': 1
+                                   }`
     );
 
     logger.info( `Keyspace "${MEIN_KEYSPACE}" angelegt oder existierte bereits.` );
@@ -158,8 +160,9 @@ export async function holeNachrichten( benutzername ) {
     try {
 
         const queryResult = await cassandraClient.execute(
-            `SELECT nachricht_text, erstellt_am FROM ${MEIN_KEYSPACE}.nachrichten
-                WHERE benutzername = ?`,
+            `SELECT nachricht_text, erstellt_am
+                    FROM ${MEIN_KEYSPACE}.nachrichten
+                    WHERE benutzername = ?`,
             [ benutzername ],
             {
                 prepare: true, // Prepared Statement
