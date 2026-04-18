@@ -1,8 +1,10 @@
 "use strict";
 
 
-let textareaNachricht = null;
-let nutzername        = null;
+let textareaNachricht   = null;
+let nutzername          = null;
+let alleNachrichtenLink = null;
+
 
 /*
  * Diese Funktion wird aufgerufen, wenn das HTML-Dokument vollständig geladen wurde.
@@ -18,10 +20,14 @@ window.addEventListener( "load", function() {
         return;
     }
 
+    const seiteTitel = document.getElementById( "seite-titel" );
+    seiteTitel.textContent += ` als Nutzer "${nutzername}"`;
+
     textareaNachricht = document.getElementById( "nachricht" );
 
-    const form = document.getElementById( "postForm" );
+    alleNachrichtenLink = document.getElementById( "alle-nachrichten-link" );
 
+    const form = document.getElementById( "postForm" );
     form.addEventListener( "submit", function (event) {
 
         event.preventDefault(); // verhindert das Neuladen der Seite
@@ -66,10 +72,14 @@ async function onSendenButton() {
 
         alert( "Nachricht erfolgreich gesendet!" );
 
+        if ( alleNachrichtenLink || alleNachrichtenLink.href === "" ) {
+            
+            alleNachrichtenLink.href        = `anzeigen.html?nutzer=${encodeURIComponent( nutzername )}`;
+            alleNachrichtenLink.textContent = `Alle Nachrichten von "${nutzername}" anzeigen`;
+        }
+
     } catch (fehler) {
 
         alert( "Fehler beim Senden der Nachricht: " + fehler.message );
-    }
-
-    
+    }    
 }
