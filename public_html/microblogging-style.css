@@ -2,10 +2,16 @@ body {
     font-family: sans-serif;
     padding: 1em;
 }
+
 tt {
     font-size: 1.3em;
     font-weight: bold;
 }
+
 li {
     margin-bottom: 1.5em;
+}
+
+fieldset {
+    border: none;
 }

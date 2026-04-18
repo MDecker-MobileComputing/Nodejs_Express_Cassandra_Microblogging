@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Microblogging mit Cassandra: Nachricht posten</title>
+    <meta charset="utf-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="microblogging-style.css">
+</head>
+<body>
+
+  <h1>Nachricht posten</h1>
+
+  <form id="postForm">
+    <fieldset id="formFieldset">
+        
+        <label for="nachricht">Deine Nachricht:</label><br><br>
+        
+        <textarea id="nachricht" name="nachricht" rows="4" cols="50"
+                  placeholder="Schreibe hier deine Nachricht..." required></textarea>
+        
+        <br><br>
+        
+        <button type="submit">Senden</button>
+        <button type="reset">Löschen</button>
+
+    </fieldset>
+  </form>
+
+
+  <!-- Erst JavaScript-Datei laden, wenn DOM-Baum geladen ist. -->
+  <script src="posten.js"></script>  
+
+</body>
