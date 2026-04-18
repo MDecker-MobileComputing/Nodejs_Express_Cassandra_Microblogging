@@ -7,6 +7,9 @@ Dieses Repositoy enthält ein Nodejs-Projekt, das einen einfachen
 mit der verteilten Datenbank [Cassandra](https://cassandra.apache.org/_/index.html)
 implementiert.
 
+Für Erzeugung der benötigten Docker-Container: 
+Siehe Unterordner [DockerCompose-Cassandra](DockerCompose-Cassandra)
+
 <br>
 
 ----

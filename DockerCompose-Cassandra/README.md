@@ -46,6 +46,15 @@ SELECT nachricht_text, erstellt_am FROM microblogging.nachrichten WHERE benutzer
 
 <br>
 
+Die letzten 20 Nachrichten über alle Nutzer abfragen:
+```
+SELECT * FROM microblogging.nachrichten ORDER BY erstellt_am DESC LIMIT 20;
+```
+Ergibt Fehlermeldung: 
+> InvalidRequest: Error from server: code=2200 [Invalid query] message="ORDER BY is only supported when the partition key is restricted by an EQ or an IN."
+
+<br>
+
 Sitzung beenden (`cqlsh` verlassen): `quit`
 
 <br>
