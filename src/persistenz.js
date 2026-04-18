@@ -12,6 +12,30 @@ const MEIN_KEYSPACE = "microblogging";
 let cassandraClient = null;
 
 
+/*
+ * Konsistenz-Level:
+ * ONE          - Schnellste, aber schwächste Garantie (nur 1 Replik)
+ * TWO
+ * THREE
+ * LOCAL_ONE    - Standard für Single-Datacenter (nur lokale Replik)
+ * 
+ * QUORUM       - Mehrheit der Repliken (besseres Gleichgewicht)
+ * LOCAL_QUORUM - Quorum im lokalen Datencenter
+ * 
+ * ALL          - Stärkste Garantie (alle Repliken bestätigen)
+ * 
+ * ANY          - nur für Schreiboperationen:
+ *                Coordinator kann den Write mit Hint-Mechanismus akzeptieren, 
+ *                selbst wenn keine Ziel-Replikat-Nodes direkt antworten.
+ * 
+ * QUORUM und ALL sind starke Konsistenz-Level, alle anderen schwache.
+ */ 
+
+const KONSISTENZLEVEL_WRITE = cassandra.types.consistencies.quorum;
+
+const KONSISTENZLEVEL_READ  = cassandra.types.consistencies.one;
+
+
 /**
  * Verbindung zu Cassandra-DB aufbauen und bei Bedarf Keyspace und Tabelle anlegen.
  * Es wird auch eine Testnachricht gespeichert.
@@ -107,7 +131,7 @@ async function erzeugeTabelle() {
  *
  * @param {String} nachricht Eigentlich Inhalt der (Kurz-)Nachricht
  *
- * @return {Boolean} `true` wenn Nachricht erfolgreich speichern konnte
+ * @return {Boolean} `true` wenn Nachricht erfolgreich gespeichert wurde
  */
 export async function speichereNachricht( benutzername, nachricht ) {
 
@@ -123,16 +147,10 @@ export async function speichereNachricht( benutzername, nachricht ) {
             [ nachricht_id, benutzername, nachricht, erstellt_am ],
             {
                 prepare: true, // Prepared Statement
-                consistencyLevel: cassandra.types.consistencies.quorum
+                consistencyLevel: KONSISTENZLEVEL_WRITE
             }
         );
 
-        // Konsistenzlevel-Optionen:
-        // ONE          - Schnellste, aber schwächste Garantie (nur 1 Replik)
-        // LOCAL_ONE    - Standard für Single-Datacenter (nur lokale Replik)
-        // QUORUM       - Mehrheit der Repliken (besseres Gleichgewicht)
-        // LOCAL_QUORUM - Quorum im lokalen Datencenter
-        // ALL          - Stärkste Garantie (alle Repliken bestätigen)
 
         logger.info( `Nachricht von "${benutzername}" erfolgreich gespeichert: "${nachricht}"` );
         return true;
@@ -166,7 +184,7 @@ export async function holeNachrichten( benutzername ) {
             [ benutzername ],
             {
                 prepare: true, // Prepared Statement
-                consistencyLevel: cassandra.types.consistencies.localQuorum
+                consistencyLevel: KONSISTENZLEVEL_READ
             }
         );
 
