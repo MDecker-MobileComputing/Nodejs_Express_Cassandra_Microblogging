@@ -33,29 +33,27 @@ window.addEventListener( "load", function() {
                 const tabellenZeile = document.createElement( "tr" );
 
                 // Username cell
-                const nameCell       = document.createElement( "td" );
-                nameCell.textContent = benutzername;
+                const zelleName       = document.createElement( "td" );
+                zelleName.textContent = benutzername;
 
                 // Nachrichten link cell
                 const zelleNachrichten      = document.createElement( "td" );
                 const nachrichtenLink       = document.createElement( "a" );
                 nachrichtenLink.textContent = "[Nachrichten]";
                 nachrichtenLink.href        = `anzeigen.html?nutzer=${encodeURIComponent( benutzername )}`;
-                zelleNachrichten.appendChild(nachrichtenLink);
+                zelleNachrichten.appendChild( nachrichtenLink );
 
                 // Posten link cell
                 const zellePosten      = document.createElement( "td" );
                 const postenLink       = document.createElement( "a" );
                 postenLink.textContent = "[Nachricht posten]";
                 postenLink.href        = `posten.html?nutzer=${encodeURIComponent( benutzername )}`;
-                zellePosten.appendChild(postenLink);
+                zellePosten.appendChild( postenLink );
 
-                // Append cells to row
-                tabellenZeile.appendChild( nameCell         );
+                tabellenZeile.appendChild( zelleName        );
                 tabellenZeile.appendChild( zelleNachrichten );
                 tabellenZeile.appendChild( zellePosten      );
 
-                // Append row to table (ergebnisDiv should be a <table> or <tbody>)
                 tabelle.appendChild( tabellenZeile );
             }
         } );

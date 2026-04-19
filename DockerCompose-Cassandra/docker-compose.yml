@@ -53,23 +53,6 @@ services:
       retries: 5
       start_period: 60s
 
-  # cassandra-web:
-  #   image: ipushc/cassandra-web:latest
-  #   container_name: microblogging-cassandra-web
-  #   environment:
-  #     - CASSANDRA_HOST_IPS=cassandra-1
-  #     - CASSANDRA_PORT=9042
-  #     - CASSANDRA_USERNAME=
-  #     - CASSANDRA_PASSWORD=
-  #   depends_on:
-  #     cassandra-1:
-  #       condition: service_healthy
-  #   ports:
-  #     - "3000:8083"
-  #   networks:
-  #     - cassandra-1-network
-  #     - cassandra-2-network
-
 networks:
   cassandra-netzwerk:
     driver: bridge
