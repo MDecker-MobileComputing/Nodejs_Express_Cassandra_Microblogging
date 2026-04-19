@@ -2,18 +2,10 @@
 
 <br>
 
-Dieses Verzeichnis enthält eine Datei [docker-compose.yml](docker-compose.yml),
-die folgende Container definiert:
-
-* 2x Cassandra:
-  * `cassandra-1` an Port 9042
-  * `cassandra-2` an Port 9043
-* Cassandra Web (Admin-UI) an Port 3000 (mit `cassandra-1` verbunden)
-
-<br>
-
-Die beiden Cassandra-Instanzen sind als Cluster verbunden, tauschen also untereinander
-die Daten aus.
+Dieses Verzeichnis enthält eine Datei [docker-compose.yml](docker-compose.yml)
+für einen aus zwei Instanzen bestehenden Cassandra-Cluster:  
+* `cassandra-1` an Port 9042
+* `cassandra-2` an Port 9043
 
 <br>
 
@@ -100,21 +92,8 @@ Gossip-Info über alle Knoten abfragen:
 nodetool gossipinfo
 ```
 
-[Gossip]](https://docs.datastax.com/en/cassandra-oss/3.x/cassandra/architecture/archGossipAbout.html)
+[Gossip](https://docs.datastax.com/en/cassandra-oss/3.x/cassandra/architecture/archGossipAbout.html)
 ist das Peer-to-Peer-Protokoll von Cassandra, mit dem die Knoten direkt untereinander Zustandsinformationen
 über Knoten austauschen.
-
-<br>
-
-----
-
-## Cassandra Web ##
-
-<br>
-
-Web-UI für Cassandra, siehe auch: https://github.com/avalanche123/cassandra-web
-
-Verbindet sich beim Start automatisch mit der Cassandra-Instanz, ist danach
-lokal unter http://localhost:3000 erreichbar.
 
 <br>
