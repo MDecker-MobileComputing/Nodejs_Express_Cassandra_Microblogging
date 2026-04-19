@@ -30,34 +30,33 @@ window.addEventListener( "load", function() {
 
                 const benutzername = daten.nutzer[i];
 
-                // Create table row
-                const row = document.createElement("tr");
+                const tabellenZeile = document.createElement( "tr" );
 
                 // Username cell
-                const nameCell = document.createElement("td");
+                const nameCell       = document.createElement( "td" );
                 nameCell.textContent = benutzername;
 
                 // Nachrichten link cell
-                const nachrichtenCell = document.createElement("td");
-                const nachrichtenLink = document.createElement("a");
+                const zelleNachrichten      = document.createElement( "td" );
+                const nachrichtenLink       = document.createElement( "a" );
                 nachrichtenLink.textContent = "[Nachrichten]";
-                nachrichtenLink.href = `anzeigen.html?nutzer=${encodeURIComponent(benutzername)}`;
-                nachrichtenCell.appendChild(nachrichtenLink);
+                nachrichtenLink.href        = `anzeigen.html?nutzer=${encodeURIComponent( benutzername )}`;
+                zelleNachrichten.appendChild(nachrichtenLink);
 
                 // Posten link cell
-                const postenCell = document.createElement("td");
-                const postenLink = document.createElement("a");
+                const zellePosten      = document.createElement( "td" );
+                const postenLink       = document.createElement( "a" );
                 postenLink.textContent = "[Nachricht posten]";
-                postenLink.href = `posten.html?nutzer=${encodeURIComponent(benutzername)}`;
-                postenCell.appendChild(postenLink);
+                postenLink.href        = `posten.html?nutzer=${encodeURIComponent( benutzername )}`;
+                zellePosten.appendChild(postenLink);
 
                 // Append cells to row
-                row.appendChild(nameCell);
-                row.appendChild(nachrichtenCell);
-                row.appendChild(postenCell);
+                tabellenZeile.appendChild( nameCell         );
+                tabellenZeile.appendChild( zelleNachrichten );
+                tabellenZeile.appendChild( zellePosten      );
 
                 // Append row to table (ergebnisDiv should be a <table> or <tbody>)
-                tabelle.appendChild(row);
+                tabelle.appendChild( tabellenZeile );
             }
         } );
 
