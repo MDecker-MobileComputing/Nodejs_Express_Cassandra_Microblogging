@@ -4,7 +4,7 @@
 
 Dieses Verzeichnis enthält eine Datei [docker-compose.yml](docker-compose.yml)
 für einen aus zwei Instanzen bestehenden Cassandra-Cluster:  
-* `cassandra-1` an Port 9042
+* `cassandra-1` an Port 9042 (Default-Port)
 * `cassandra-2` an Port 9043
 
 <br>
@@ -15,9 +15,11 @@ für einen aus zwei Instanzen bestehenden Cassandra-Cluster:
 
 <br>
 
-Terminal zu `microblogging-cassandra-1` öffnen und mit dem CLI `cqlsh` (Cassandra Query Language Shell) starten.
+Terminal zu einer der beiden Instanzen öffnen und mit dem CLI `cqlsh` (Cassandra Query Language Shell) starten. Die CLI-Sitzung wird mit dem Befehl `quit` beendet. 
 
-Alle Keyspaces ausgeben: `describe keyspaces`
+<br>
+
+Alle Keyspaces ausgeben: `DESCRIBE KEYSPACES`
 
 Details zu einzelnem Keyspace abfragen: `DESCRIBE KEYSPACE <name_keyspace>`
 
@@ -25,29 +27,54 @@ Details zu einzelnem Keyspace abfragen: `DESCRIBE KEYSPACE <name_keyspace>`
 
 Keyspace anlegen:
 ```
-CREATE KEYSPACE microblogging
-       WITH REPLICATION = { 'class': 'SimpleStrategy', 'replication_factor': 1 };
+CREATE KEYSPACE microblogging IF NOT EXISTING
+       WITH REPLICATION = { 'class'             : 'SimpleStrategy', 
+                            'replication_factor': 1 
+                          };
 ```
+
+Ein Cassandra-Knoten kann über seine Konfiguration erfahren, in welchem Rechenzentrum
+er läuft. Diese Information kann man ausnutzen, um beim Anlegen eines Keyspaces
+festzulegen, wie viele Replikate in den einzelnen Rechenzentren laufen sollen:
+```
+CREATE KEYSPACE mein_keyspace 
+       WITH replication = {
+              'class'         : 'NetworkTopologyStrategy',
+              'rechenzentrum1': 2,
+              'rechenzentrum2': 2
+       };
+```
+Achtung: Es muss hierfür auch `NetworkTopologyStrategy` statt `SimpleStrategy` gewählt werden.
+
 
 <br>
 
 Alle Nachrichten eines bestimmten Nutzers abfragen:
 ```
-SELECT nachricht_text, erstellt_am FROM microblogging.nachrichten WHERE benutzername = 'testnutzer';
+SELECT nachricht_text, erstellt_am 
+       FROM microblogging.nachrichten 
+       WHERE benutzername = 'testnutzer';
 ```
+
+<br>
+
+Abfragen, welche Nutzer es gibt:
+``` 
+SELECT DISTINCT benutzername 
+       FROM microblogging.nachrichten;
+```
+Achtung: Sortieren der Nutzer mit `ORDER BY benutzername ASC` ist nicht möglich.
 
 <br>
 
 Die letzten 20 Nachrichten über alle Nutzer abfragen:
 ```
-SELECT * FROM microblogging.nachrichten ORDER BY erstellt_am DESC LIMIT 20;
+SELECT * FROM microblogging.nachrichten 
+         ORDER BY erstellt_am 
+         DESC LIMIT 20;
 ```
 Ergibt Fehlermeldung: 
 > InvalidRequest: Error from server: code=2200 [Invalid query] message="ORDER BY is only supported when the partition key is restricted by an EQ or an IN."
-
-<br>
-
-Sitzung beenden (`cqlsh` verlassen): `quit`
 
 <br>
 
@@ -73,15 +100,9 @@ nodetool status
 Abfrage, welche Knoten einen bestimmten Datensatz speichern müssen:
 ```
 nodetool getendpoints <keyspace> <table> <partition_key>
-```
-Funktioniert auch, wenn der *Partition Key* noch nicht existiert.
-
-<br>
-
-Konkretes Beispiel:
-```
 nodetool getendpoints microblogging nachrichten testnutzer
 ```
+Funktioniert auch, wenn der *Partition Key* noch nicht existiert.
 
 Es werden eine oder mehrere IP-Adressen ausgegeben.
 
@@ -97,3 +118,17 @@ ist das Peer-to-Peer-Protokoll von Cassandra, mit dem die Knoten direkt unterein
 über Knoten austauschen.
 
 <br>
+
+Token von einzelnen Knoten für bestimmten Keyspace ausgeben lassen:
+```
+nodetool ring <keyspace>
+nodetool ring microblogging
+```
+
+<br>
+
+Token-Ranges ausgeben lassen (describe ring):
+```
+nodetool describering <keyspace>
+nodetool describering microblogging
+```
