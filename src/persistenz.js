@@ -176,7 +176,7 @@ export async function holeNachrichten( benutzername ) {
 
     try {
 
-        const queryResult = await cassandraClient.execute(
+        const queryErgebnis = await cassandraClient.execute(
             `SELECT nachricht_text, erstellt_am
                     FROM ${MEIN_KEYSPACE}.nachrichten
                     WHERE benutzername = ?`,
@@ -188,7 +188,7 @@ export async function holeNachrichten( benutzername ) {
         );
 
         const nachrichtenArray =
-                    queryResult.rows.map( row => ({
+                    queryErgebnis.rows.map( row => ({
                         nachricht  : row.nachricht_text,
                         erstellt_am: row.erstellt_am
                     }) );
@@ -218,16 +218,16 @@ export async function holeDistinctNutzer() {
 
     try {
 
-        const queryResult = await cassandraClient.execute(
+        const queryErgebnis = await cassandraClient.execute(
             `SELECT DISTINCT benutzername
-                    FROM ${MEIN_KEYSPACE}.nachrichten`,
+                    FROM ${MEIN_KEYSPACE}.nachrichten`, // "ORDER BY benutzername" geht nicht mit DISTINCT
             {
                 prepare: true, // Prepared Statement
                 consistencyLevel: KONSISTENZLEVEL_READ
             }                    
         );
 
-        const distinctNutzerArray = queryResult.rows.map( row => row.benutzername );
+        const distinctNutzerArray = queryErgebnis.rows.map( row => row.benutzername ).sort();
 
         return distinctNutzerArray;
 
