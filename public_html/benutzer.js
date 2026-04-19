@@ -6,8 +6,8 @@
  */
 window.addEventListener( "load", function() {
 
-    const seiteTitel  = document.getElementById( "seite-titel" );
-    const ergebnisDiv = document.getElementById( "ergebnis"    );
+    const seiteTitel = document.getElementById( "seite-titel" );
+    const tabelle    = document.getElementById( "tabelle"     );
 
     // Alle Benutzer von der Server-API abrufen und anzeigen
     fetch( "api/v1/benutzer" )
@@ -26,30 +26,38 @@ window.addEventListener( "load", function() {
             const anzahlBenutzer = daten.nutzer.length;
             seiteTitel.textContent += ` (${anzahlBenutzer})`;
 
-            for ( let i = 0; i < daten.nutzer.length; i++ ) {
+            for (let i = 0; i < daten.nutzer.length; i++) {
 
                 const benutzername = daten.nutzer[i];
-                const benutzerDiv = document.createElement( "div" );
-                benutzerDiv.textContent = benutzername + "  ";
 
-                // Link zum Anzeigen der Nachrichten des Benutzers
-                const nachrichtenLink       = document.createElement( "a" );
+                // Create table row
+                const row = document.createElement("tr");
+
+                // Username cell
+                const nameCell = document.createElement("td");
+                nameCell.textContent = benutzername;
+
+                // Nachrichten link cell
+                const nachrichtenCell = document.createElement("td");
+                const nachrichtenLink = document.createElement("a");
                 nachrichtenLink.textContent = "[Nachrichten]";
-                nachrichtenLink.href        = `anzeigen.html?nutzer=${encodeURIComponent( benutzername )}`;
+                nachrichtenLink.href = `anzeigen.html?nutzer=${encodeURIComponent(benutzername)}`;
+                nachrichtenCell.appendChild(nachrichtenLink);
 
-                const blankText = document.createElement( "span" );
-                blankText.textContent = "    ";
-
-                const postenLink       = document.createElement( "a" );
+                // Posten link cell
+                const postenCell = document.createElement("td");
+                const postenLink = document.createElement("a");
                 postenLink.textContent = "[Nachricht posten]";
-                postenLink.href        = `posten.html?nutzer=${encodeURIComponent( benutzername )}`;
+                postenLink.href = `posten.html?nutzer=${encodeURIComponent(benutzername)}`;
+                postenCell.appendChild(postenLink);
 
-                ergebnisDiv.appendChild( benutzerDiv     );                
-                benutzerDiv.appendChild( nachrichtenLink );
-                benutzerDiv.appendChild( blankText       );
-                benutzerDiv.appendChild( postenLink      );
+                // Append cells to row
+                row.appendChild(nameCell);
+                row.appendChild(nachrichtenCell);
+                row.appendChild(postenCell);
 
-                ergebnisDiv.appendChild( document.createElement( "br" ) );
+                // Append row to table (ergebnisDiv should be a <table> or <tbody>)
+                tabelle.appendChild(row);
             }
         } );
 
