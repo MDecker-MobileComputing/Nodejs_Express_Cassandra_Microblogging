@@ -4,10 +4,42 @@
     {
       "entity": {
         "type": "Project",
-        "id": "b49c2a44-37d2-4205-bab2-1cd6d8266268",
+        "id": "fc9862af-1909-4df8-98bd-da15ec3d488b",
         "name": "MicrobloggingMitCassandra"
       },
       "children": [
+        {
+          "entity": {
+            "type": "Request",
+            "method": {
+              "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+              "name": "GET"
+            },
+            "body": {
+              "formBody": {
+                "overrideContentType": true,
+                "encoding": "application/x-www-form-urlencoded",
+                "items": []
+              },
+              "bodyType": "Text"
+            },
+            "uri": {
+              "query": {
+                "delimiter": "&",
+                "items": []
+              },
+              "scheme": {
+                "name": "http",
+                "version": "V11"
+              },
+              "host": "localhost:8080",
+              "path": "/api/v1/benutzer"
+            },
+            "id": "7451c2db-f913-4438-870f-95be5fb0fc8e",
+            "name": "GET benutzer",
+            "headers": []
+          }
+        },
         {
           "entity": {
             "type": "Request",
@@ -41,7 +73,7 @@
               "host": "localhost:8080",
               "path": "/api/v1/nachrichten"
             },
-            "id": "9974bfc7-48e4-490c-8bde-94a552556474",
+            "id": "fb630bda-11fb-40e8-ab37-35d3f23b580e",
             "name": "GET nachrichten",
             "headers": []
           }
@@ -75,7 +107,7 @@
               "host": "localhost:8080",
               "path": "/api/v1/nachrichten"
             },
-            "id": "9a692cc0-e60e-490a-a129-72d8c81108a6",
+            "id": "2684e133-385b-4feb-8f52-eca6e42f5f73",
             "name": "POST nachrichten",
             "headers": [
               {

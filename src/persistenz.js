@@ -86,9 +86,8 @@ async function erzeugeKeyspace() {
 
     await cassandraClient.execute(
         `CREATE KEYSPACE IF NOT EXISTS ${MEIN_KEYSPACE}
-                WITH REPLICATION = { 'class'             : 'SimpleStrategy',
-                                     'replication_factor': 1
-                                   }`
+                WITH REPLICATION = { 'class'             : 'SimpleStrategy',                                     
+                                     'replication_factor': 1                 }`                                   
     );
 
     logger.info( `Keyspace "${MEIN_KEYSPACE}" angelegt oder existierte bereits.` );
@@ -200,6 +199,42 @@ export async function holeNachrichten( benutzername ) {
 
         logger.error(
             `Fehler beim Abrufen der Nachrichten für Nutzer "${benutzername}": `,
+            fehler );
+
+        return null;
+    }
+}
+
+
+/**
+ * Alle Nutzer zurückliefern, die mindestens eine Nachricht in der Datenbank haben.
+ *
+ * @returns {Array} Array mit allen Nutzernamen, die mindestens eine Nachricht 
+ *                  in der Datenbank haben. Array kann leer sein, wenn keine 
+ *                  Nachrichten in der Datenbank sind; im Fehlerfall wird `null`
+ *                  zurückgegeben.
+ */
+export async function holeDistinctNutzer() {
+
+    try {
+
+        const queryResult = await cassandraClient.execute(
+            `SELECT DISTINCT benutzername
+                    FROM ${MEIN_KEYSPACE}.nachrichten`,
+            {
+                prepare: true, // Prepared Statement
+                consistencyLevel: KONSISTENZLEVEL_READ
+            }                    
+        );
+
+        const distinctNutzerArray = queryResult.rows.map( row => row.benutzername );
+
+        return distinctNutzerArray;
+
+    } catch ( fehler ) {
+
+        logger.error(
+            `Fehler beim Abrufen der distinct Benutzernamen: `,
             fehler );
 
         return null;

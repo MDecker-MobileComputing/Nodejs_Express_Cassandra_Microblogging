@@ -1,6 +1,8 @@
 import createLogger from "logging";
 
-import { speichereNachricht, holeNachrichten } from "./persistenz.js";
+import { speichereNachricht, 
+         holeNachrichten, 
+         holeDistinctNutzer } from "./persistenz.js";
 
 const logger = createLogger( "express" );
 
@@ -21,6 +23,12 @@ export function routenRegistrieren( expressObjekt ) {
 
     expressObjekt.post( collectionNachrichten, postNachricht );
     logger.info( "Route registriert: POST ", collectionNachrichten );
+
+
+    const collectionBenutzer = BASIS_URL + "/benutzer";
+
+    expressObjekt.get( collectionBenutzer, getBenutzer );
+    logger.info( "Route registriert: GET ", collectionBenutzer );
 }
 
 
@@ -104,5 +112,35 @@ async function getNachrichten( request, response ) {
                              anzahl     : nachrichtenArray.length,
                              nachrichten: nachrichtenArray
                            } );
+    }
+}
+
+
+/**
+ * Event-Handler für GET-Anfrage zur Abfrage aller Nutzer.
+ * 
+ * @param {*} request Wird nicht ausgewertet
+ * 
+ * @param {*} response Array mit allen Nutzern im Attribut "nutzer", sowie die Anzahl der 
+ *                     Nutzer im Attribut "anzahl"; 
+ *                     im Fehlerfall wird ein Fehlertext im Attribut "fehlertext" zurückgegeben.
+ */
+async function getBenutzer( request, response ) {
+
+    const nutzerArray = await holeDistinctNutzer();
+
+    if ( nutzerArray === null ) {
+
+        response.status( 500 )
+                .json( { status    : "Fehler",
+                         fehlertext: "Fehler beim Abrufen der Nutzer von der Datenbank." } );
+
+    } else {
+
+        response.status( 200 )
+                .json( { status: "OK",
+                         anzahl: nutzerArray.length,
+                         nutzer: nutzerArray
+                       } );
     }
 }
