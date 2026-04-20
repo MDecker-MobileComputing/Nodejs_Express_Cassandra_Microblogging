@@ -11,7 +11,7 @@ services:
       - CASSANDRA_DC=rechenzentrum1 # DC: Data Center (Rechenzentrum)
       - CASSANDRA_RACK=rack1
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_NUM_TOKENS=128
+      - CASSANDRA_NUM_TOKENS=8 # Anzahl virtuelle Knoten (vNodes)
       - MAX_HEAP_SIZE=512M
       - HEAP_NEWSIZE=100M
     ports:
@@ -34,7 +34,7 @@ services:
       - CASSANDRA_DC=rechenzentrum1
       - CASSANDRA_RACK=rack2
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_NUM_TOKENS=128
+      - CASSANDRA_NUM_TOKENS=8
       - CASSANDRA_SEEDS=cassandra-1
       - MAX_HEAP_SIZE=512M
       - HEAP_NEWSIZE=100M
