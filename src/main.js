@@ -1,8 +1,8 @@
-import createLogger           from "logging";
-import express                from "express";
-import { routenRegistrieren } from "./controller.js";
+import createLogger from "logging";
+import express      from "express";
 
-import { initDatenbankverbindung } from './persistenz.js';
+import { routenRegistrieren      } from "./controller.js";
+import { initDatenbankverbindung } from "./persistenz.js";
 
 
 const logger = createLogger( "main" );
@@ -16,7 +16,7 @@ try {
 } catch ( fehler ) {
 
     logger.error( "Verbindung zu Datenbank konnte nicht aufgebaut werden.", fehler );
-    process.exit(1);
+    process.exit( 1 );
 }
 
 
