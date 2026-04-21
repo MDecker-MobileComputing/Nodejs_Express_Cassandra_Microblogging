@@ -14,22 +14,23 @@ let cassandraClient = null;
 
 /*
  * Konsistenz-Level:
- * ONE          - Schnellste, aber schwächste Garantie (nur 1 Replik)
+
+ * ONE          - Schnellstes, aber schwächste Garantie (nur 1 Replik)
  * TWO
  * THREE
  * LOCAL_ONE    - Standard für Single-Datacenter (nur lokale Replik)
- * 
+ *
  * QUORUM       - Mehrheit der Repliken (besseres Gleichgewicht)
  * LOCAL_QUORUM - Quorum im lokalen Datencenter
- * 
+ *
  * ALL          - Stärkste Garantie (alle Repliken bestätigen)
- * 
+ *
  * ANY          - nur für Schreiboperationen:
- *                Coordinator kann den Write mit Hint-Mechanismus akzeptieren, 
+ *                Coordinator kann den Write mit Hint-Mechanismus akzeptieren,
  *                selbst wenn keine Ziel-Replikat-Nodes direkt antworten.
- * 
+ *
  * QUORUM und ALL sind starke Konsistenz-Level, alle anderen schwache.
- */ 
+ */
 
 const KONSISTENZLEVEL_WRITE = cassandra.types.consistencies.quorum;
 
@@ -86,8 +87,8 @@ async function erzeugeKeyspace() {
 
     await cassandraClient.execute(
         `CREATE KEYSPACE IF NOT EXISTS ${MEIN_KEYSPACE}
-                WITH REPLICATION = { 'class'             : 'SimpleStrategy',                                     
-                                     'replication_factor': 1                 }`                                   
+                WITH REPLICATION = { 'class'             : 'SimpleStrategy',
+                                     'replication_factor': 1                 }`
     );
 
     logger.info( `Keyspace "${MEIN_KEYSPACE}" angelegt oder existierte bereits.` );
@@ -209,8 +210,8 @@ export async function holeNachrichten( benutzername ) {
 /**
  * Alle Nutzer zurückliefern, die mindestens eine Nachricht in der Datenbank haben.
  *
- * @returns {Array} Array mit allen Nutzernamen, die mindestens eine Nachricht 
- *                  in der Datenbank haben. Array kann leer sein, wenn keine 
+ * @returns {Array} Array mit allen Nutzernamen, die mindestens eine Nachricht
+ *                  in der Datenbank haben. Array kann leer sein, wenn keine
  *                  Nachrichten in der Datenbank sind; im Fehlerfall wird `null`
  *                  zurückgegeben.
  */
@@ -224,7 +225,7 @@ export async function holeDistinctNutzer() {
             {
                 prepare: true, // Prepared Statement
                 consistencyLevel: KONSISTENZLEVEL_READ
-            }                    
+            }
         );
 
         const distinctNutzerArray = queryErgebnis.rows.map( row => row.benutzername ).sort();
