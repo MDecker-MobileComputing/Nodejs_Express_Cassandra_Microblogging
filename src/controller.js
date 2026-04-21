@@ -1,7 +1,7 @@
 import createLogger from "logging";
 
-import { speichereNachricht, 
-         holeNachrichten, 
+import { speichereNachricht,
+         holeNachrichten,
          holeDistinctNutzer } from "./persistenz.js";
 
 const logger = createLogger( "express" );
@@ -53,7 +53,6 @@ async function postNachricht( request, response ) {
         response.status( 400 )
                 .json( { status    : "Fehler",
                          fehlertext: "Ungültige Anfrage, fehlende oder leere Felder." } );
-
     } else {
 
         const erfolgreichGespeichert =
@@ -63,7 +62,6 @@ async function postNachricht( request, response ) {
 
             response.status( 201 )
                     .json( { status: "OK" } );
-
         } else {
 
             response.status( 500 )
@@ -118,11 +116,11 @@ async function getNachrichten( request, response ) {
 
 /**
  * Event-Handler für GET-Anfrage zur Abfrage aller Nutzer.
- * 
+ *
  * @param {*} request Wird nicht ausgewertet
- * 
- * @param {*} response Array mit allen Nutzern im Attribut "nutzer", sowie die Anzahl der 
- *                     Nutzer im Attribut "anzahl"; 
+ *
+ * @param {*} response Array mit allen Nutzern im Attribut "nutzer", sowie die Anzahl der
+ *                     Nutzer im Attribut "anzahl";
  *                     im Fehlerfall wird ein Fehlertext im Attribut "fehlertext" zurückgegeben.
  */
 async function getBenutzer( request, response ) {
