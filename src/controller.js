@@ -92,7 +92,7 @@ async function getNachrichten( request, response ) {
 
         logger.warn( "Ungültige Anfrage, fehlender Parameter 'benutzername'." );
         response.status( 400 )
-                .json( { status: "Fehler",
+                .json( { status : "Fehler",
                          message: "Ungültige Anfrage, fehlender Parameter 'benutzername'." } );
     } else {
 
