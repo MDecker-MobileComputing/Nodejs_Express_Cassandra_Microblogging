@@ -115,24 +115,23 @@ async function getNachrichten( request, response ) {
 
 
 /**
- * Event-Handler für GET-Anfrage zur Abfrage aller Nutzer.
+ * Event-Handler für GET-Anfrage zur Abfrage aller Nutzer, die mindestens eine Nachricht
+ * gepostet haben.
  *
  * @param {*} request Wird nicht ausgewertet
  *
- * @param {*} response Array mit allen Nutzern im Attribut "nutzer", sowie die Anzahl der
- *                     Nutzer im Attribut "anzahl";
- *                     im Fehlerfall wird ein Fehlertext im Attribut "fehlertext" zurückgegeben.
+ * @param {*} response Array mit allen Nutzern im Attribut "nutzer", sowie die Anzahl
+ *                     der Nutzer im Attribut "anzahl"; im Fehlerfall wird ein
+ *                     Fehlertext im Attribut "fehlertext" zurückgegeben.
  */
 async function getBenutzer( request, response ) {
 
     const nutzerArray = await holeDistinctNutzer();
-
     if ( nutzerArray === null ) {
 
         response.status( 500 )
                 .json( { status    : "Fehler",
                          fehlertext: "Fehler beim Abrufen der Nutzer von der Datenbank." } );
-
     } else {
 
         response.status( 200 )
