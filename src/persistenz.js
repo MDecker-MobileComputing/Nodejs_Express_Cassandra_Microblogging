@@ -221,15 +221,17 @@ export async function holeDistinctNutzer() {
 
         const queryErgebnis = await cassandraClient.execute(
             `SELECT DISTINCT benutzername
-                    FROM ${MEIN_KEYSPACE}.nachrichten`, // "ORDER BY benutzername" geht nicht mit DISTINCT
+                    FROM ${MEIN_KEYSPACE}.nachrichten`,
             {
-                prepare: true, // Prepared Statement
+                prepare: true,
                 consistencyLevel: KONSISTENZLEVEL_READ
             }
         );
 
-        const distinctNutzerArray = queryErgebnis.rows.map( row => row.benutzername ).sort();
-
+        const distinctNutzerArray =
+                        queryErgebnis.rows
+                                     .map( row => row.benutzername )
+                                     .sort();
         return distinctNutzerArray;
 
     } catch ( fehler ) {
