@@ -231,7 +231,7 @@ export async function holeDistinctNutzer() {
         const distinctNutzerArray =
                         queryErgebnis.rows
                                      .map( row => row.benutzername )
-                                     .sort();
+                                     .sort(); // "ORDER BY benutzername" geht nicht mit DISTINCT
         return distinctNutzerArray;
 
     } catch ( fehler ) {
