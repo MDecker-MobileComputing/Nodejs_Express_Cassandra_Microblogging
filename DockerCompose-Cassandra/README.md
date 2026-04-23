@@ -3,7 +3,7 @@
 <br>
 
 Dieses Verzeichnis enthält eine Datei [docker-compose.yml](docker-compose.yml)
-für einen aus zwei Instanzen bestehenden Cassandra-Cluster:  
+für einen aus zwei Instanzen bestehenden Cassandra-Cluster:
 * `cassandra-1` an Port 9042 (Default-Port)
 * `cassandra-2` an Port 9043
 
@@ -15,7 +15,7 @@ für einen aus zwei Instanzen bestehenden Cassandra-Cluster:
 
 <br>
 
-Terminal zu einer der beiden Instanzen öffnen und mit dem CLI `cqlsh` (Cassandra Query Language Shell) starten. Die CLI-Sitzung wird mit dem Befehl `quit` beendet. 
+Terminal zu einer der beiden Instanzen öffnen und mit dem CLI `cqlsh` (Cassandra Query Language Shell) starten. Die CLI-Sitzung wird mit dem Befehl `quit` beendet.
 
 <br>
 
@@ -29,7 +29,7 @@ Keyspace anlegen:
 ```
 CREATE KEYSPACE microblogging IF NOT EXISTING
        WITH REPLICATION = {
-              'class'             : 'SimpleStrategy', 
+              'class'             : 'SimpleStrategy',
               'replication_factor': 1
        };
 ```
@@ -38,7 +38,7 @@ Ein Cassandra-Knoten kann über seine Konfiguration erfahren, in welchem Rechenz
 er läuft. Diese Information kann man ausnutzen, um beim Anlegen eines Keyspaces
 festzulegen, wie viele Replikate in den einzelnen Rechenzentren laufen sollen:
 ```
-CREATE KEYSPACE mein_keyspace 
+CREATE KEYSPACE mein_keyspace
        WITH replication = {
               'class'         : 'NetworkTopologyStrategy',
               'rechenzentrum1': 2,
@@ -47,21 +47,33 @@ CREATE KEYSPACE mein_keyspace
 ```
 Achtung: Es muss hierfür auch `NetworkTopologyStrategy` statt `SimpleStrategy` als Wert für `class` gewählt werden.
 
+<br>
+
+Anlegen einer Tabelle in dem so erstellten Keyspace:
+```
+CREATE TABLE IF NOT EXISTS microblogging.nachrichten (
+       nachricht_id   UUID,
+       benutzername   TEXT,
+       nachricht_text TEXT,
+       erstellt_am    TIMESTAMP,
+       PRIMARY KEY ( (benutzername), erstellt_am )
+) WITH CLUSTERING ORDER BY ( erstellt_am DESC )
+```
 
 <br>
 
 Alle Nachrichten eines bestimmten Nutzers abfragen:
 ```
-SELECT nachricht_text, erstellt_am 
-       FROM microblogging.nachrichten 
+SELECT nachricht_text, erstellt_am
+       FROM microblogging.nachrichten
        WHERE benutzername = 'testnutzer';
 ```
 
 <br>
 
 Abfragen, welche Nutzer es gibt:
-``` 
-SELECT DISTINCT benutzername 
+```
+SELECT DISTINCT benutzername
        FROM microblogging.nachrichten;
 ```
 Achtung: Sortieren der Nutzer mit `ORDER BY benutzername ASC` ist nicht möglich.
@@ -70,11 +82,11 @@ Achtung: Sortieren der Nutzer mit `ORDER BY benutzername ASC` ist nicht möglich
 
 Die letzten 20 Nachrichten über alle Nutzer abfragen:
 ```
-SELECT * FROM microblogging.nachrichten 
-         ORDER BY erstellt_am 
+SELECT * FROM microblogging.nachrichten
+         ORDER BY erstellt_am
          DESC LIMIT 20;
 ```
-Ergibt Fehlermeldung: 
+Ergibt Fehlermeldung:
 > InvalidRequest: Error from server: code=2200 [Invalid query] message="ORDER BY is only supported when the partition key is restricted by an EQ or an IN."
 
 <br>
