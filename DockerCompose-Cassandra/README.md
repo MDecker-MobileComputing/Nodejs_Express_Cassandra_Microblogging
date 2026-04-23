@@ -28,9 +28,10 @@ Details zu einzelnem Keyspace abfragen: `DESCRIBE KEYSPACE <name_keyspace>`
 Keyspace anlegen:
 ```
 CREATE KEYSPACE microblogging IF NOT EXISTING
-       WITH REPLICATION = { 'class'             : 'SimpleStrategy', 
-                            'replication_factor': 1 
-                          };
+       WITH REPLICATION = {
+              'class'             : 'SimpleStrategy', 
+              'replication_factor': 1
+       };
 ```
 
 Ein Cassandra-Knoten kann über seine Konfiguration erfahren, in welchem Rechenzentrum
@@ -44,7 +45,7 @@ CREATE KEYSPACE mein_keyspace
               'rechenzentrum2': 2
        };
 ```
-Achtung: Es muss hierfür auch `NetworkTopologyStrategy` statt `SimpleStrategy` gewählt werden.
+Achtung: Es muss hierfür auch `NetworkTopologyStrategy` statt `SimpleStrategy` als Wert für `class` gewählt werden.
 
 
 <br>
